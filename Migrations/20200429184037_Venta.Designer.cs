@@ -10,8 +10,8 @@ using ProyectoSoftware;
 namespace ProyectoSoftware.Migrations
 {
     [DbContext(typeof(VentaContext))]
-    [Migration("20200427192511_VentaORM")]
-    partial class VentaORM
+    [Migration("20200429184037_Venta")]
+    partial class Venta
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,7 +37,7 @@ namespace ProyectoSoftware.Migrations
                     b.Property<string>("Dni")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Fechadeactualizaion1")
+                    b.Property<DateTime>("FechaIncercion")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -61,7 +61,7 @@ namespace ProyectoSoftware.Migrations
                     b.Property<string>("Codigo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Fechadeactualizaion1")
+                    b.Property<DateTime>("FechaIncercion")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Marca")
@@ -85,18 +85,39 @@ namespace ProyectoSoftware.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Fechadeactualizaion")
+                    b.Property<int?>("ClienteId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaIncercion")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Fechadeactualizaion1")
+                    b.Property<DateTime>("Fechadeactualizaion2")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Id1")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductoId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("ProductoId");
+
                     b.ToTable("Venta");
+                });
+
+            modelBuilder.Entity("ProyectoSoftware.Venta", b =>
+                {
+                    b.HasOne("ProyectoSoftware.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId");
+
+                    b.HasOne("ProyectoSoftware.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("ProductoId");
                 });
 #pragma warning restore 612, 618
         }

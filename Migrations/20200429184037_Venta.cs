@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProyectoSoftware.Migrations
 {
-    public partial class VentaORM : Migration
+    public partial class Venta : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,7 @@ namespace ProyectoSoftware.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Fechadeactualizaion1 = table.Column<DateTime>(nullable: false),
+                    FechaIncercion = table.Column<DateTime>(nullable: false),
                     Nombre = table.Column<string>(nullable: true),
                     Apellido = table.Column<string>(nullable: true),
                     Dni = table.Column<string>(nullable: true),
@@ -31,7 +31,7 @@ namespace ProyectoSoftware.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Fechadeactualizaion1 = table.Column<DateTime>(nullable: false),
+                    FechaIncercion = table.Column<DateTime>(nullable: false),
                     Codigo = table.Column<string>(nullable: true),
                     Marca = table.Column<string>(nullable: true),
                     Nombre = table.Column<string>(nullable: true),
@@ -48,26 +48,50 @@ namespace ProyectoSoftware.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Fechadeactualizaion1 = table.Column<DateTime>(nullable: false),
-                    Fechadeactualizaion = table.Column<DateTime>(nullable: false),
-                    Id1 = table.Column<int>(nullable: false)
+                    FechaIncercion = table.Column<DateTime>(nullable: false),
+                    ProductoId = table.Column<int>(nullable: true),
+                    ClienteId = table.Column<int>(nullable: true),
+                    Id1 = table.Column<int>(nullable: false),
+                    Fechadeactualizaion2 = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Venta", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Venta_Clientes_ClienteId",
+                        column: x => x.ClienteId,
+                        principalTable: "Clientes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Venta_Productos_ProductoId",
+                        column: x => x.ProductoId,
+                        principalTable: "Productos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Venta_ClienteId",
+                table: "Venta",
+                column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Venta_ProductoId",
+                table: "Venta",
+                column: "ProductoId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Venta");
+
+            migrationBuilder.DropTable(
                 name: "Clientes");
 
             migrationBuilder.DropTable(
                 name: "Productos");
-
-            migrationBuilder.DropTable(
-                name: "Venta");
         }
     }
 }

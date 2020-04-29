@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ProyectoSoftware
 {
-     public  class Entidad
+    public class Entidad
     {
         public int id;
-        public DateTime Fechadeactualizaion;
+        private DateTime fechaIncercion;
 
         public int Id { get => id; set => id = value; }
-        public DateTime Fechadeactualizaion1 { get => Fechadeactualizaion; set => Fechadeactualizaion = value; }
+        public DateTime FechaIncercion { get => fechaIncercion; set => fechaIncercion = value; }
     }
 }

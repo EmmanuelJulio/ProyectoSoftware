@@ -18,11 +18,25 @@ namespace ProyectoSoftware.Date
             }
         }
 
+        public List<T> TraerIncertadosHoy()
+        {
+            using (var db = new VentaContext())
+            {
+                return db.Set<T>().Where(x => x.FechaIncercion == DateTime.Today).ToList();
+            }
+        }
+        public T ObtenerPorId(int id)
+        {
+            using (var db = new VentaContext())
+            {
+                return db.Set<T>().FirstOrDefault(x => x.Id == id);
+            }
+        }
         public void Agregar(T entidad)
         {
             using (var db = new VentaContext())
             {
-                entidad.Fechadeactualizaion = DateTime.Now;
+                entidad.FechaIncercion = DateTime.Today;
                 db.Entry(entidad).State = EntityState.Added;
                 db.SaveChanges();
             }
@@ -80,13 +94,7 @@ namespace ProyectoSoftware.Date
             }
         }
 
-        public T ObtenerPorId(int id)
-        {
-            using (var db = new VentaContext())
-            {
-                return db.Set<T>().FirstOrDefault(x => x.Id == id);
-            }
-        }
+       
 
         public int Contar(Expression<Func<T, bool>> where)
         {

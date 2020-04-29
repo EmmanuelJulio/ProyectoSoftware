@@ -9,7 +9,7 @@ namespace ProyectoSoftware
 {
     public class MenuUsuario
     {
-        public static MenuUsuario instans=null;
+        public static MenuUsuario instans = null;
         public Cliente Clienteseleccionado;
         private List<Producto> ProductosSeleccionadosParaComprar = new List<Producto>();
         public static MenuUsuario GetMenu()
@@ -24,119 +24,253 @@ namespace ProyectoSoftware
         {
         }
 
-        public int menuInicial()
+        public void menuInicial()
         {
-            Console.WriteLine("Bienvenido ,Como decea ingresar?");
-            Console.WriteLine("1 Ingresar como cliente");
-            Console.WriteLine("2 ingresar como vendedor");
+
             int opcion;
-            try
+            do
             {
-                int.TryParse(Console.ReadLine(), out (opcion));
-                return opcion;
+                Console.WriteLine("Bienvenido ,Como decea ingresar?");
+                Console.WriteLine("1 Ingresar como cliente");
+                Console.WriteLine("2 ingresar como vendedor");
+                opcion = int.Parse(Console.ReadLine());
+                switch (opcion)
+                {
+                    case 1:
+                        Console.Clear();
+                        MenuCliente();
+                        break;
+                    case 2:
+                        Console.Clear();
 
-            }
-            catch (Exception)
-            {
-                Console.Clear();
-                Console.WriteLine("Debe ingresar un numero");
-                menuInicial();
-                throw new ArgumentException();
-            }
+                        Console.Clear();
+                        MenuAdministrador();
+                        break;
+                    case 3:
+                        return;
+                }
 
-           
-        }
-        public void SeleccionDeModo(int opcion)
-        {
-            switch (opcion)
-            {
-                case 1:
-                    MenuCliente();
-                    break;
-                case 2:
-                    MenuAdministrador();
-                    break;
-            }
-        }
-
-        private void MenuAdministrador()
-        {
-            throw new NotImplementedException();
+            } while (opcion == 3);
         }
 
         public void MenuCliente()
         {
+            Console.Clear();
             Clienteseleccionado = QuienEselCliente();
-            Console.WriteLine("Bienvenido ,Señor " + Clienteseleccionado.Nombre+" "+Clienteseleccionado.Apellido);
+            Console.Clear();
+            Console.WriteLine("Bienvenido ,Señor " + Clienteseleccionado.Nombre + " " + Clienteseleccionado.Apellido);
             Console.WriteLine("1 Comprar Productos");
             Console.WriteLine("2 VerProductosComprados");
+            Console.WriteLine("3.Salir de comprador");
             int opcion;
+            var RepProd = new Repositorio<Producto>();
+            List<Producto> ProductosAgregados = new List<Producto>();
+            List<Producto> LisProd = RepProd.OptenerTodos();
             opcion = Convert.ToInt32(Console.ReadLine());
-            ComparMAsOVerCarrito(opcion);
+            Console.Clear();
+            Console.WriteLine("");
+            int VariableParaSalir = LisProd.Count + 1;
+            int opcionCompra;
            
+            do
+            {
+               
 
+                switch (opcion)
+                {
+                    case 1:
 
+                        Console.WriteLine("-----------Comprando (Modo Cliente)---------- Usuario " + Clienteseleccionado.Nombre + " " + Clienteseleccionado.Apellido + "--------------------------");
+                        Console.WriteLine("");
+                        Console.WriteLine("ingrese Todos los productos que quiera ,para Finalizar la seleccion y realizar la compra precione " + VariableParaSalir);
+                        
+                        for (int i = 0; i < LisProd.Count; i++)
+                        {
+                            int numeroCorrecto = i + 1;
+                            Console.WriteLine(numeroCorrecto + ")_ " + LisProd[i].Nombre + " " + LisProd[i].Marca + " " + LisProd[i].Precio);
+                        }
+                        opcionCompra = Convert.ToInt32(Console.ReadLine()) - 1;
+                        Console.WriteLine();
+
+                        do
+                        {
+
+                            ProductosSeleccionadosParaComprar.Add(LisProd[opcionCompra]);
+                            Console.WriteLine("");
+                            Console.WriteLine();
+                            Console.WriteLine("Se Agrego el producto " + LisProd[opcionCompra].Nombre);
+                            Console.WriteLine();
+                            opcionCompra = Convert.ToInt32(Console.ReadLine()) - 1;
+                        } while (opcionCompra + 1 != VariableParaSalir);
+                        ComprarProductos(ProductosSeleccionadosParaComprar);
+                        Console.Clear();
+                        MenuCliente();
+                        break;
+
+                    case 2:
+                        VerCarrito();
+                        break;
+                    case 3:
+                        continue;
+                }
+
+            } while (opcion != 3);
         }
-        public void ComparMAsOVerCarrito(int op=1)
+        //private void ListarProductos()
+        // {
+        //     var RepProd = new Repositorio<Producto>();
+        //     List<Producto> ProductosAgregados = new List<Producto>();
+        //     List<Producto> LisProd = RepProd.OptenerTodos();
+        //     int VariableParaSalir = LisProd.Count + 1;
+        //     int opcion;
+        //     Console.WriteLine("-----------Comprando (Modo Cliente)---------- Usuario " + Clienteseleccionado.Nombre + " " + Clienteseleccionado.Apellido + "--------------------------");
+        //     Console.WriteLine("");
+
+        //     do
+
+        //     {
+        //         for (int i = 0; i < LisProd.Count; i++)
+        //         {
+        //             int numeroCorrecto = i + 1;
+        //             Console.WriteLine(numeroCorrecto + ")_ " + LisProd[i].Nombre + " " + LisProd[i].Marca + " " + LisProd[i].Precio);
+        //         }
+        //         Console.WriteLine();
+
+        //         if (opcion != VariableParaSalir)
+        //         {
+
+        //             ProductosSeleccionadosParaComprar.Add(LisProd[opcion]);
+        //             Console.WriteLine("");
+        //             Console.WriteLine();
+        //             Console.WriteLine("Se Agrego el producto " + LisProd[opcion].Nombre);
+        //             Console.WriteLine();
+        //             Console.WriteLine("ingrese otro producto ,para Finalizar la seleccion y realizar la compra precione " + VariableParaSalir);
+        //             opcion = Convert.ToInt32(Console.ReadLine()) - 1;
+        //         }
+        //         else
+        //         {
+        //             ComprarProductos(ProductosSeleccionadosParaComprar);
+
+        //         }
+
+
+        //     } while (opcion == VariableParaSalir);
+
+
+        // }
+        private void VerCarrito()
         {
-            switch (op)
+            Console.WriteLine("Actualmente tiene estos productos en el carrito");
+            decimal total = 0;
+            foreach (Producto pr in ProductosSeleccionadosParaComprar)
+            {
+                total += pr.Precio;
+                Console.WriteLine(pr.Nombre + " " + pr.Marca + " " + pr.Precio);
+            }
+            Console.Write("Total:---------  " + total + " ----------------");
+        }
+        private void VerCarritoDespuesDeCompra()
+        {
+            Console.WriteLine("Su compra fue realizada con exito Sr " + Clienteseleccionado.Nombre);
+            Console.WriteLine("");
+            decimal total = 0;
+
+            foreach (Producto pr in ProductosSeleccionadosParaComprar)
+            {
+                
+                total += pr.Precio;
+                Console.WriteLine(pr.Nombre + " " + pr.Marca + " " + pr.Precio);
+            }
+            Console.WriteLine("");
+            Console.Write("Total:---------  " + total + " ----------------");
+            ProductosSeleccionadosParaComprar.Clear();
+            Clienteseleccionado = null;
+            Console.WriteLine("Precione una tecla para continuar...");
+            Console.ReadKey();
+        }
+
+        private void MenuAdministrador()
+        {
+            int opcion;
+            do
+            {
+                Console.Clear();
+
+                Console.WriteLine("1 Listar Productos del dia");
+               // Console.WriteLine("2 Agregar producto");
+               // Console.WriteLine("3.Registrar cliente");
+
+                opcion = Convert.ToInt32(Console.ReadLine());
+                OpcionesDelAdministrador(opcion);
+            } while (opcion != 3);
+        }
+
+        private void OpcionesDelAdministrador(int opcion)
+        {
+            var RepVentas = new Repositorio<Venta>();
+            var repClientes = new Repositorio<Cliente>();
+            var repProductos = new Repositorio<Producto>();
+            List<Venta> Listventas = RepVentas.TraerIncertadosHoy();
+            switch (opcion)
             {
                 case 1:
-                    Console.WriteLine("--------Añada cuantos productos quiera comprar (para finalizar ingrese 0)--------");
-                    if (ComprarProductos(ListarProductos()))
-                        Console.WriteLine("su compra fue realizada");
-                    else
-                        Console.WriteLine("este codigo es una verga....");
+                    Console.WriteLine("Ventas realizadas en el dia de hoy");
+                    foreach (Venta vent in Listventas)
+                    {
+                        Console.WriteLine("Producto " + repProductos.ObtenerPorId(vent.ProductoId).Nombre + "////// Nombre cliente que lo compro " + repClientes.ObtenerPorId(vent.ClienteID).Nombre +" /////// Fecha exacta : " +vent.Fechadeactualizaion2.ToString());
+                    }
+                    Console.WriteLine("Oprima una tecla para continuar...");
+                    Console.ReadLine();
+                    Console.Clear();
+                    MenuAdministrador();
                     break;
                 case 2:
-                    if (ProductosSeleccionadosParaComprar.Count>0)
+                    Console.WriteLine("Oprima una tecla para continuar...");
+                    string a = Console.ReadLine();
+                    Console.WriteLine("Oprima una tecla para continuar...");
+                    string b = Console.ReadLine();
+                    Console.WriteLine("Oprima una tecla para continuar...");
+                    string c = Console.ReadLine();
+                    Console.WriteLine("Oprima una tecla para continuar...");
+                    string d = Console.ReadLine();
+                    Console.WriteLine("Oprima una tecla para continuar...");
+                    string e = Console.ReadLine();
+                    Console.WriteLine("Oprima una tecla para continuar...");
+                    Producto pr = new Producto()
                     {
-                        Console.WriteLine("Actualmente tiene estos productos en el carrito");
-                        decimal total = 0;
-                        foreach (Producto pr in ProductosSeleccionadosParaComprar)
-                        {
-                            total += pr.Precio;
-                            Console.WriteLine(pr.Nombre + " " + pr.Marca + " " + pr.Precio);
 
-                        }
-                        Console.Write("Total " + total);
-                       
-                    }
-                    else
-                    {
-                        Console.WriteLine("No tiene productos en el carrito");
-                    }
-
-                    Console.WriteLine("Seguir comprando y/n");
-                    string op2 = Console.ReadLine();
-
-                    if (op2 == "y")
-                        ComparMAsOVerCarrito(1);
-                    else
-                        ComparMAsOVerCarrito(3);
-
+                    };
 
                     break;
                 case 3:
-                    ComprarProductos(ProductosSeleccionadosParaComprar);
+
                     break;
             }
         }
 
-        private bool ComprarProductos(List<Producto> list)
+        public void ComparMAsOVerCarrito(int op = 1)
+        {
+
+        }
+
+        private bool ComprarProductos(List<Producto> ProductosSeleccionadosParaComprar)
         {
             Repositorio<Venta> RepVenta = new Repositorio<Venta>();
             try
             {
-                foreach (Producto pro in list)
+                foreach (Producto pro in ProductosSeleccionadosParaComprar)
                 {
                     Venta vent = new Venta()
                     {
-                        ClienteNavigator = Clienteseleccionado,
-                        ProductoNavigator = pro,
+                        ClienteID = Clienteseleccionado.id,
+                        ProductoId = pro.id,
+                        Cliente = Clienteseleccionado,
+                        Producto = pro,
                     };
                     RepVenta.Agregar(vent);
                 }
+                VerCarritoDespuesDeCompra();
+
                 return true;
             }
             catch (Exception)
@@ -144,57 +278,50 @@ namespace ProyectoSoftware
 
                 return false;
             }
+
         }
-
-        private List<Producto> ListarProductos()
-        {
-            var RepProd = new Repositorio<Producto>();
-            List<Producto> ProductosAgregados = new List<Producto>();
-            List<Producto> LisProd = RepProd.OptenerTodos();
-            for(int i=0;i< LisProd.Count; i++)
-            {
-                
-                Console.WriteLine(i + ")_ " + LisProd[i].Nombre + " " + LisProd[i].Marca + " " + LisProd[i].Precio);
-            }
-            int opcion = Convert.ToInt32(Console.ReadLine());
-            do
-            {
-                int opcion2 = Convert.ToInt32(Console.ReadLine());
-                ProductosSeleccionadosParaComprar.Add(LisProd[opcion]);
-                Console.WriteLine("Se Agrego el producto "+LisProd[opcion].Nombre);
-             } while (opcion<LisProd.Count);
-            return ProductosAgregados;
-
-             }
 
         private Cliente QuienEselCliente()
         {
-            var _RepCli = new Repositorio<Cliente>();
-           List<Cliente> clientes = _RepCli.OptenerTodos();
-            Console.WriteLine("quien es usted");
-          for(int i = 1; i < clientes.Count; i++)
-            {
-                Console.WriteLine(i + ")_ " +clientes[i].Nombre + " " + clientes[i].Apellido);
-            }
-
+            Console.Clear();
             int intcli;
+            
+            var _RepCli = new Repositorio<Cliente>();
+            List<Cliente> clientes = _RepCli.OptenerTodos();
+            Console.WriteLine("");
+            do
+            {
 
-            int.TryParse(Console.ReadLine(),out intcli);
-           if (intcli> clientes.Count)
-            {
-                Console.WriteLine("solo tenias que apretar un numerito ....");
-                QuienEselCliente();
-                throw new ArgumentException();
-            }
-            else
-            {
-                return clientes[intcli];
-            }
-        
+                Console.WriteLine("Buenos dias ,Como quien quiere loguearse");
+                Console.WriteLine();
+                for (int i = 1; i < clientes.Count; i++)
+                {
+                    Console.WriteLine(i + ") " + clientes[i].Nombre + " " + clientes[i].Apellido);
+                }
+                Console.WriteLine(clientes.Count + 1 + ") Volver");
+                
+
+
+                int.TryParse(Console.ReadLine(), out intcli);
+                if (intcli > clientes.Count+1)
+                {
+                    Console.WriteLine("solo tenias que apretar un numerito ....");
+                    QuienEselCliente();
+                    throw new ArgumentException();
+                }
+                if(intcli<=clientes.Count)
+                {
+                    return clientes[intcli];
+                }
+                else
+                {
+                    Console.Clear();
+                    menuInicial();
+                    throw new ArgumentException();
+                }
+            } while (intcli > clientes.Count);
+
         }
-
-
-
         public void CargarClientesyProductos()
         {
             Cliente cliente1 = new Cliente()
@@ -248,7 +375,6 @@ namespace ProyectoSoftware
                 Codigo = Random.Equals(988, 118447).ToString()
 
             };
-
             Producto producto2 = new Producto()
             {
                 Nombre = "Pantalones",
@@ -279,8 +405,10 @@ namespace ProyectoSoftware
             RepProd.Agregar(producto3);
             RepProd.Agregar(producto4);
         }
+
+
     }
 
 
-    
+
 }
