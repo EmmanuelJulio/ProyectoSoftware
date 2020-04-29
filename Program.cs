@@ -1,4 +1,5 @@
 ﻿using System;
+using ProyectoSoftware.Date;
 
 namespace ProyectoSoftware
 {
@@ -6,7 +7,10 @@ namespace ProyectoSoftware
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            
+            MenuUsuario Menu = MenuUsuario.GetMenu();
+     //       Menu.CargarClientesyProductos();
+           Menu.SeleccionDeModo(Menu.menuInicial());
         }
     }
 }
