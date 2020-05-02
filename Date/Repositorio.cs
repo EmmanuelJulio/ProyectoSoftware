@@ -25,6 +25,39 @@ namespace ProyectoSoftware.Date
                 return db.Set<T>().Where(x => x.FechaIncercion == DateTime.Today).ToList();
             }
         }
+        public List<T> TraerSegunParametros(ParametrosDeQuery<T> parametrosDeQuery)
+        {
+            var orderByClass = ObtenerOrderBy(parametrosDeQuery);
+            Expression<Func<T, bool>> whereTrue = x => true;
+            var where = (parametrosDeQuery.Where == null) ? whereTrue : parametrosDeQuery.Where;
+            using (var db = new VentaContext())
+            {
+
+                return db.Set<T>().Where(where).OrderByDescending(orderByClass.OrderBy).ToList();
+            }
+        }
+        public IEnumerable<T> EncontrarPor(ParametrosDeQuery<T> parametrosDeQuery)
+        {
+            var orderByClass = ObtenerOrderBy(parametrosDeQuery);
+            Expression<Func<T, bool>> whereTrue = x => true;
+            var where = (parametrosDeQuery.Where == null) ? whereTrue : parametrosDeQuery.Where;
+            using (VentaContext db = new VentaContext())
+            {
+                if (orderByClass.IsAscending)
+                {
+                    return db.Set<T>().Where(where).OrderBy(orderByClass.OrderBy)
+                    .Skip((parametrosDeQuery.Pagina - 1) * parametrosDeQuery.Top)
+                    .Take(parametrosDeQuery.Top).ToList();
+                }
+                else
+                {
+                    return db.Set<T>().Where(where).OrderByDescending(orderByClass.OrderBy)
+                    .Skip((parametrosDeQuery.Pagina - 1) * parametrosDeQuery.Top)
+                    .Take(parametrosDeQuery.Top).ToList();
+                }
+
+            }
+        }
         public T ObtenerPorId(int id)
         {
             using (var db = new VentaContext())
@@ -52,28 +85,7 @@ namespace ProyectoSoftware.Date
             }
         }
 
-        public IEnumerable<T> EncontrarPor(ParametrosDeQuery<T> parametrosDeQuery)
-        {
-            var orderByClass = ObtenerOrderBy(parametrosDeQuery);
-            Expression<Func<T, bool>> whereTrue = x => true;
-            var where = (parametrosDeQuery.Where == null) ? whereTrue : parametrosDeQuery.Where;
-            using (VentaContext db = new VentaContext())
-            {
-                if (orderByClass.IsAscending)
-                {
-                    return db.Set<T>().Where(where).OrderBy(orderByClass.OrderBy)
-                    .Skip((parametrosDeQuery.Pagina - 1) * parametrosDeQuery.Top)
-                    .Take(parametrosDeQuery.Top).ToList();
-                }
-                else
-                {
-                    return db.Set<T>().Where(where).OrderByDescending(orderByClass.OrderBy)
-                    .Skip((parametrosDeQuery.Pagina - 1) * parametrosDeQuery.Top)
-                    .Take(parametrosDeQuery.Top).ToList();
-                }
-
-            }
-        }
+       
 
         private OrderByClass ObtenerOrderBy(ParametrosDeQuery<T> parametrosDeQuery)
         {

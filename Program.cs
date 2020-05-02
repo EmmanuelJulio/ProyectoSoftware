@@ -9,8 +9,10 @@ namespace ProyectoSoftware
         {
             
             MenuUsuario Menu = MenuUsuario.GetMenu();
-        // Menu.CargarClientesyProductos();
-            Menu.menuInicial();
+            // Menu.CargarClientesyProductos();
+            MenuSimple menusimple = new MenuSimple();
+            menusimple.Menu();
+            //Menu.menuInicial();
         }
     }
 }

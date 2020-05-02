@@ -8,6 +8,13 @@ namespace ProyectoSoftware.Date
 {
     public class ParametrosDeQuery<T>
     {
+        public ParametrosDeQuery()
+        {
+            Where = null;
+            OrderBy = null;
+            OrderByDescending = null;
+        }
+
         public ParametrosDeQuery(int pagina, int top)
         {
             Pagina = pagina;
