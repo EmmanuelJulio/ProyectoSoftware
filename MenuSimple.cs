@@ -14,8 +14,6 @@ namespace ProyectoSoftware
         Repositorio<Cliente> cliRep = new Repositorio<Cliente>();
         public void Menu()
         {
-
-
             string opcion;
             do
             {
@@ -33,25 +31,27 @@ namespace ProyectoSoftware
                         break;
                     case "2":
                         Console.Clear();
-
                         ReporteVentasDehoy();
-                        
                         break;
-                        
-
                     case "3":
                         BuscarEnVentas();
                         return;
+
+                    case "4":
+                        RegistrarClientes();
+                        break;
                     default:
                         Console.Clear();
                         Console.WriteLine("Opcion invalida");
-
                         final();
                         break;
                 }
 
             } while (opcion == "3");
         }
+
+       
+
         public void RegistrarVentasTotales()
         {
             Repositorio<Venta> ventRep = new Repositorio<Venta>();
@@ -82,51 +82,33 @@ namespace ProyectoSoftware
         }
         public void BuscarEnVentas()
         {
-            string opcion;
-            do
+            Console.WriteLine("1 buscar por nombre de producto ");
+
+            Console.WriteLine("Ingrese el nombre del producto o alguna palabra en el");
+            string text = Console.ReadLine();
+            using (VentaContext db = new VentaContext())
             {
-                Console.WriteLine("1 buscar por nombre de producto ");
-                Console.WriteLine("2 Buscar por codigo ");
-                Console.WriteLine("3 buscar por marca) ");
-                opcion = Console.ReadLine();
-                 switch (opcion)
-                {
-                    case "1":
-                        Console.WriteLine("Ingrese el nombre del producto o alguna palabra en el");
-                        string text = Console.ReadLine();
-                        using (VentaContext db = new VentaContext())
-                        {
-                            var lista = from t1 in db.Venta
+                List<Producto> lista = (from t1 in db.Venta
                                         join t2 in db.Productos
                                         on t1.ProductoId equals t2.id
-                                        select new { t2.Nombre, t2.Marca, t2.Precio };
-
-                            var lista2 = (from x in lista where x.Nombre.Contains(text) select x).ToList();
-                            foreach (var x in lista2)
-                            {
-                                Console.WriteLine(x.Nombre + " " + x.Marca + " " + x.Precio);
-                            }
-                        }
-                        
-                            
-                        
-                        final2();
-                        break;
-                    case "2":
-                        Console.WriteLine("Ingrese el codigo del producto");
-                        final2();
-                        break;
-                    case "3":
-                        Console.WriteLine("Ingrese la marca del producto");
-                        final2();
-                        break;
+                                        where t2.Nombre.Contains(text)
+                                        select t2).ToList();
+                if (lista.Count!=0)
+                {
+                    foreach (Producto ob in lista)
+                    {
+                        Console.WriteLine(ob.Nombre + " " + ob.Precio);
+                    }
                 }
+                else
+                {
+                    Console.WriteLine("No existen coincidencias...");
 
-
+                }
+                final();
             }
-            while (opcion != "4" );
         }
-       
+
         public void RegistrarClientes()
         {
             Console.WriteLine("Ingrese el nombre");
